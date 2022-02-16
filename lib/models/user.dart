@@ -12,4 +12,19 @@ class User {
     required this.lastName,
     required this.photo,
   });
+
+  User.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        email = json['email'],
+        firstName = json['firstName'],
+        lastName = json['lastName'],
+        photo = json['photo'];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'photo': photo,
+      };
 }

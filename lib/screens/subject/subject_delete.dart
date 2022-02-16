@@ -18,6 +18,7 @@ class SubjectDelete extends StatelessWidget {
         ElevatedButton(
           child: const Text('Yes'),
           onPressed: () {
+            // TODO: Delete subject
             Navigator.of(context).pop(true);
           },
         ),
