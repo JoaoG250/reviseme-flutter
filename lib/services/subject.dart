@@ -36,4 +36,8 @@ class SubjectService {
     final jsonData = json.decode(response.body);
     return Subject.fromJson(jsonData);
   }
+
+  Future<void> deleteSubject(int subjectId) async {
+    await client.delete('subjects/$subjectId/');
+  }
 }

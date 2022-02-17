@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SubjectDelete extends StatelessWidget {
-  const SubjectDelete({Key? key}) : super(key: key);
+  const SubjectDelete({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,6 @@ class SubjectDelete extends StatelessWidget {
         ElevatedButton(
           child: const Text('Yes'),
           onPressed: () {
-            // TODO: Delete subject
             Navigator.of(context).pop(true);
           },
         ),

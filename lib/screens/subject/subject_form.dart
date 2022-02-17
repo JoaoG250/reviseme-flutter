@@ -5,8 +5,11 @@ import 'package:reviseme/services/subject.dart';
 class SubjectForm extends StatefulWidget {
   final Subject? subject;
   final SubjectService service;
-  const SubjectForm({Key? key, required this.service, this.subject})
-      : super(key: key);
+  const SubjectForm({
+    Key? key,
+    required this.service,
+    this.subject,
+  }) : super(key: key);
 
   @override
   _SubjectFormState createState() => _SubjectFormState();

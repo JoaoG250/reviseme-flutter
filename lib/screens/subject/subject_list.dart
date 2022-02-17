@@ -74,11 +74,22 @@ class _SubjectListState extends State<SubjectList> {
             ),
           ),
           onDismissed: (direction) {},
-          confirmDismiss: (direction) {
-            return showDialog(
+          confirmDismiss: (direction) async {
+            final result = await showDialog(
               context: context,
               builder: (context) => const SubjectDelete(),
             );
+
+            if (result == true) {
+              await service.deleteSubject(_subjects[index].id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Subject deleted'),
+                ),
+              );
+            }
+
+            return result;
           },
         );
       },
@@ -94,12 +105,13 @@ class _SubjectListState extends State<SubjectList> {
     return ListTile(
       title: Text(_subjects[index].name),
       subtitle: Text(_subjects[index].description),
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+      onTap: () async {
+        await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SubjectModify(
             subjectId: _subjects[index].id,
           ),
         ));
+        _fetchSubjects();
       },
     );
   }
