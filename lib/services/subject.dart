@@ -23,4 +23,17 @@ class SubjectService {
     final jsonData = json.decode(response.body);
     return Subject.fromJson(jsonData);
   }
+
+  Future<Subject> createSubject(CreateSubjectInput subject) async {
+    final response = await client.post('subjects/', subject.toJson());
+    final jsonData = json.decode(response.body);
+    return Subject.fromJson(jsonData);
+  }
+
+  Future<Subject> updateSubject(
+      int subjectId, UpdateSubjectInput subject) async {
+    final response = await client.put('subjects/$subjectId/', subject.toJson());
+    final jsonData = json.decode(response.body);
+    return Subject.fromJson(jsonData);
+  }
 }

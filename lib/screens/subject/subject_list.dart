@@ -42,9 +42,13 @@ class _SubjectListState extends State<SubjectList> {
         title: const Text('Subject List'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const SubjectModify()));
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const SubjectModify(),
+            ),
+          );
+          _fetchSubjects();
         },
         child: const Icon(Icons.add),
       ),
@@ -58,26 +62,29 @@ class _SubjectListState extends State<SubjectList> {
     BuildContext context,
   ) {
     return ListView.separated(
-        itemBuilder: (context, index) {
-          return Dismissible(
-              key: ValueKey(_subjects[index].id),
-              child: _buildSubjectTile(context, index),
-              direction: DismissDirection.startToEnd,
-              background: Container(
-                color: Colors.red,
-                child: const ListTile(
-                  leading: Icon(Icons.delete, color: Colors.white),
-                ),
-              ),
-              onDismissed: (direction) {},
-              confirmDismiss: (direction) {
-                return showDialog(
-                    context: context,
-                    builder: (context) => const SubjectDelete());
-              });
-        },
-        separatorBuilder: (context, index) => const Divider(height: 1),
-        itemCount: _subjects.length);
+      itemBuilder: (context, index) {
+        return Dismissible(
+          key: ValueKey(_subjects[index].id),
+          child: _buildSubjectTile(context, index),
+          direction: DismissDirection.startToEnd,
+          background: Container(
+            color: Colors.red,
+            child: const ListTile(
+              leading: Icon(Icons.delete, color: Colors.white),
+            ),
+          ),
+          onDismissed: (direction) {},
+          confirmDismiss: (direction) {
+            return showDialog(
+              context: context,
+              builder: (context) => const SubjectDelete(),
+            );
+          },
+        );
+      },
+      separatorBuilder: (context, index) => const Divider(height: 1),
+      itemCount: _subjects.length,
+    );
   }
 
   Widget _buildSubjectTile(
@@ -89,9 +96,10 @@ class _SubjectListState extends State<SubjectList> {
       subtitle: Text(_subjects[index].description),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => SubjectModify(
-                  subjectId: _subjects[index].id,
-                )));
+          builder: (context) => SubjectModify(
+            subjectId: _subjects[index].id,
+          ),
+        ));
       },
     );
   }

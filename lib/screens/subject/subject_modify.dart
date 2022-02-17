@@ -41,13 +41,15 @@ class _SubjectModifyState extends State<SubjectModify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(isEditing ? 'Modify Subject' : 'Create Subject'),
-        ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.all(15),
-                child: SubjectForm(subject: _subject)));
+      appBar: AppBar(
+        title: Text(isEditing ? 'Modify Subject' : 'Create Subject'),
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(15),
+              child: SubjectForm(service: service, subject: _subject),
+            ),
+    );
   }
 }

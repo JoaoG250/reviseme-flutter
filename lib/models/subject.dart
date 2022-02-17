@@ -22,13 +22,34 @@ class Subject {
         image = json['image'],
         createdAt = json['createdAt'],
         updatedAt = json['updatedAt'];
+}
+
+class CreateSubjectInput {
+  final String name;
+  final String description;
+  final String? image;
+
+  CreateSubjectInput({
+    required this.name,
+    required this.description,
+    this.image,
+  });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'name': name,
         'description': description,
-        'image': image,
-        'created_at': createdAt,
-        'updated_at': updatedAt,
+        if (image != null) 'image': image,
       };
+}
+
+class UpdateSubjectInput extends CreateSubjectInput {
+  UpdateSubjectInput({
+    required String name,
+    required String description,
+    String? image,
+  }) : super(
+          name: name,
+          description: description,
+          image: image,
+        );
 }

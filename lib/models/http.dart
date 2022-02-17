@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:logging/logging.dart';
 import 'package:http/http.dart' as http;
 
 class HttpError extends Error {
@@ -29,14 +31,19 @@ class InternalServerError extends HttpError {
 
 class HttpClient {
   final String baseUrl;
-  final Map<String, String>? headers;
+  late Map<String, String> headers;
   late Uri _uri;
+  final _logger = Logger('HttpClient');
 
   HttpClient({
     required this.baseUrl,
-    this.headers,
+    this.headers = const {},
   }) {
     _uri = Uri.parse(baseUrl);
+    headers.putIfAbsent(
+      'Content-Type',
+      () => 'application/json; charset=utf-8',
+    );
   }
 
   bool _hasError(http.Response response) {
@@ -53,14 +60,19 @@ class HttpClient {
 
     switch (response.statusCode) {
       case 400:
+        _logger.severe('Bad request ${response.body}');
         throw BadRequestError(response);
       case 401:
+        _logger.severe('Unauthorized ${response.body}');
         throw UnauthorizedError(response);
       case 403:
+        _logger.severe('Forbidden ${response.body}');
         throw ForbiddenError(response);
       case 404:
+        _logger.severe('Not found ${response.body}');
         throw NotFoundError(response);
       case 500:
+        _logger.severe('Internal server error ${response.body}');
         throw InternalServerError(response);
       default:
         throw HttpError(response.statusCode, response);
@@ -68,37 +80,72 @@ class HttpClient {
   }
 
   Map<String, String> _getHeaders(Map<String, String>? extraHeaders) {
-    final allHeaders = Map<String, String>.from(headers ?? {});
+    final allHeaders = Map<String, String>.from(headers);
     if (extraHeaders != null) {
       allHeaders.addAll(extraHeaders);
     }
     return allHeaders;
   }
 
-  Future<http.Response> get(String path, [Map<String, String>? headers]) async {
-    final response =
-        await http.get(_uri.resolve(path), headers: _getHeaders(headers));
+  Uri _encodeUrl(String path, Map<String, dynamic>? params) {
+    final url = _uri.resolve(path);
+
+    if (params == null) {
+      return url;
+    }
+
+    return url.replace(queryParameters: params);
+  }
+
+  Future<http.Response> get(
+    String path, {
+    Map<String, dynamic>? params,
+    Map<String, String>? headers,
+  }) async {
+    final response = await http.get(
+      _encodeUrl(path, params),
+      headers: _getHeaders(headers),
+    );
     return _checkRespose(response);
   }
 
-  Future<http.Response> post(String path, Map<String, dynamic> body,
-      [Map<String, String>? headers]) async {
-    final response = await http.post(_uri.resolve(path),
-        body: body, headers: _getHeaders(headers));
+  Future<http.Response> post(
+    String path,
+    Map<String, dynamic> body, {
+    Map<String, dynamic>? params,
+    Map<String, String>? headers,
+  }) async {
+    final response = await http.post(
+      _encodeUrl(path, params),
+      body: json.encode(body),
+      headers: _getHeaders(headers),
+    );
     return _checkRespose(response);
   }
 
-  Future<http.Response> put(String path, Map<String, dynamic> body,
-      [Map<String, String>? headers]) async {
-    final response = await http.put(_uri.resolve(path),
-        body: body, headers: _getHeaders(headers));
+  Future<http.Response> put(
+    String path,
+    Map<String, dynamic> body, {
+    Map<String, dynamic>? params,
+    Map<String, String>? headers,
+  }) async {
+    final response = await http.put(
+      _encodeUrl(path, params),
+      body: json.encode(body),
+      headers: _getHeaders(headers),
+    );
     return _checkRespose(response);
   }
 
-  Future<http.Response> delete(String path,
-      [Map<String, String>? headers]) async {
-    final response =
-        await http.delete(_uri.resolve(path), headers: _getHeaders(headers));
+  Future<http.Response> delete(
+    String path, {
+    Map<String, dynamic>? params,
+    Map<String, String>? headers,
+  }) async {
+    final response = await http.delete(
+      _encodeUrl(path, params),
+      headers: _getHeaders(headers),
+    );
     return _checkRespose(response);
   }
 }

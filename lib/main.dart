@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logging/logging.dart';
 import 'package:reviseme/models/http.dart';
 import 'package:reviseme/screens/subject/subject_list.dart';
 import 'package:reviseme/services/subject.dart';
@@ -14,7 +15,16 @@ void initLocator() {
 }
 
 void main() {
+  // Logger config
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((rec) {
+    debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
+
+  // Locator init
   initLocator();
+
+  // Run app
   runApp(const App());
 }
 
