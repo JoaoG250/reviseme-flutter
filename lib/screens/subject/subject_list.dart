@@ -29,7 +29,6 @@ class _SubjectListState extends State<SubjectList> {
     });
 
     final subjects = await service.getSubjects();
-
     setState(() {
       _subjects = subjects;
       _isLoading = false;

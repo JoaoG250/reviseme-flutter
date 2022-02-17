@@ -17,4 +17,10 @@ class SubjectService {
     }
     return subjects;
   }
+
+  Future<Subject> getSubject(int subjectId) async {
+    final response = await client.get('subjects/$subjectId/');
+    final jsonData = json.decode(response.body);
+    return Subject.fromJson(jsonData);
+  }
 }
