@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/http.dart';
 import 'package:reviseme/services/auth.dart';
+import 'package:reviseme/utils/valitators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthMode {
@@ -79,34 +80,53 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  Widget _buildButtons() {
-    if (_authMode == AuthMode.login) {
-      return Column(
-        children: <Widget>[
-          ElevatedButton(
-            child: const Text('Login'),
-            onPressed: _submit,
-          ),
-          TextButton(
-            child: const Text('Dont have an account? Tap here to register.'),
-            onPressed: _changeAuthMode,
-          ),
-        ],
-      );
-    } else {
-      return Column(
-        children: <Widget>[
-          ElevatedButton(
-            child: const Text('Register'),
-            onPressed: _submit,
-          ),
-          TextButton(
-            child: const Text('Have an account? Click here to login.'),
-            onPressed: _changeAuthMode,
-          )
-        ],
-      );
-    }
+  List<Widget> _buildButtons() {
+    return [
+      ElevatedButton(
+        child: _authMode == AuthMode.login
+            ? const Text('Login')
+            : const Text('Register'),
+        onPressed: _submit,
+      ),
+      TextButton(
+        child: _authMode == AuthMode.login
+            ? const Text('Dont have an account? Tap here to register.')
+            : const Text('Have an account? Tap here to login.'),
+        onPressed: _changeAuthMode,
+      ),
+    ];
+  }
+
+  List<Widget> _buildFormFields() {
+    return [
+      TextFormField(
+        initialValue: _email,
+        decoration: const InputDecoration(
+          labelText: 'Email',
+        ),
+        validator: (value) => requiredValidator(value, 'Email'),
+        onSaved: (value) => _email = value,
+      ),
+      _authMode == AuthMode.register
+          ? TextFormField(
+              initialValue: _firstName,
+              decoration: const InputDecoration(
+                labelText: 'First Name',
+              ),
+              validator: (value) => requiredValidator(value, 'First Name'),
+              onSaved: (value) => _firstName = value,
+            )
+          : Container(),
+      TextFormField(
+        initialValue: _password,
+        decoration: const InputDecoration(
+          labelText: 'Password',
+        ),
+        validator: (value) => requiredValidator(value, 'Password'),
+        onSaved: (value) => _password = value,
+        obscureText: true,
+      )
+    ];
   }
 
   Widget _buildForm() {
@@ -114,50 +134,9 @@ class _AuthScreenState extends State<AuthScreen> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          TextFormField(
-            initialValue: _email,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Email is required';
-              }
-              return null;
-            },
-            onSaved: (value) => _email = value,
-          ),
-          _authMode == AuthMode.register
-              ? TextFormField(
-                  initialValue: _firstName,
-                  decoration: const InputDecoration(
-                    labelText: 'First Name',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'First Name is required';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _firstName = value,
-                )
-              : Container(),
-          TextFormField(
-            initialValue: _password,
-            decoration: const InputDecoration(
-              labelText: 'Password',
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password is required';
-              }
-              return null;
-            },
-            onSaved: (value) => _password = value,
-            obscureText: true,
-          ),
-          const SizedBox(height: 12.0),
-          _buildButtons(),
+          ..._buildFormFields(),
+          const SizedBox(height: 20.0),
+          ..._buildButtons(),
         ],
       ),
     );
