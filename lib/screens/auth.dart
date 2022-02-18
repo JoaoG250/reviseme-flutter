@@ -76,7 +76,7 @@ class _AuthScreenState extends State<AuthScreen> {
       }
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/subjects',
+        '/home',
         (route) => false,
       );
     }
