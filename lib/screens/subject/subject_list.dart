@@ -1,84 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/subject.dart';
 import 'package:reviseme/screens/subject/subject_delete.dart';
 import 'package:reviseme/screens/subject/subject_modify.dart';
-import 'package:reviseme/services/subject.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class SubjectList extends StatefulWidget {
-  const SubjectList({Key? key}) : super(key: key);
+typedef FetchSujects = Future<void> Function();
+typedef DeleteSubject = Future<void> Function(int subjectId);
 
-  @override
-  _SubjectListState createState() => _SubjectListState();
-}
+class SubjectList extends StatelessWidget {
+  final List<Subject> subjects;
+  final FetchSujects fetchSubjects;
+  final DeleteSubject deleteSubject;
 
-class _SubjectListState extends State<SubjectList> {
-  SubjectService get service => GetIt.I<SubjectService>();
-  List<Subject> _subjects = [];
-  bool _isLoading = false;
+  const SubjectList({
+    Key? key,
+    required this.subjects,
+    required this.fetchSubjects,
+    required this.deleteSubject,
+  }) : super(key: key);
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchSubjects();
-  }
-
-  _fetchSubjects() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    final subjects = await service.getSubjects();
-    setState(() {
-      _subjects = subjects;
-      _isLoading = false;
-    });
-  }
-
-  void _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-
-    Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
+  Widget _buildSubjectTile(
+    BuildContext context,
+    int index,
+  ) {
+    return ListTile(
+      title: Text(subjects[index].name),
+      subtitle: Text(subjects[index].description),
+      onTap: () async {
+        await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SubjectModify(
+            subjectId: subjects[index].id,
+          ),
+        ));
+        fetchSubjects();
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Subject List'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _logout,
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const SubjectModify(),
-            ),
-          );
-          _fetchSubjects();
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _buildSubjectList(context),
-    );
-  }
-
-  Widget _buildSubjectList(
-    BuildContext context,
-  ) {
     return ListView.separated(
       itemBuilder: (context, index) {
         return Dismissible(
-          key: ValueKey(_subjects[index].id),
+          key: ValueKey(subjects[index].id),
           child: _buildSubjectTile(context, index),
           direction: DismissDirection.startToEnd,
           background: Container(
@@ -95,7 +58,7 @@ class _SubjectListState extends State<SubjectList> {
             );
 
             if (result == true) {
-              await service.deleteSubject(_subjects[index].id);
+              await deleteSubject(subjects[index].id);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Subject deleted'),
@@ -108,25 +71,7 @@ class _SubjectListState extends State<SubjectList> {
         );
       },
       separatorBuilder: (context, index) => const Divider(height: 1),
-      itemCount: _subjects.length,
-    );
-  }
-
-  Widget _buildSubjectTile(
-    BuildContext context,
-    int index,
-  ) {
-    return ListTile(
-      title: Text(_subjects[index].name),
-      subtitle: Text(_subjects[index].description),
-      onTap: () async {
-        await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SubjectModify(
-            subjectId: _subjects[index].id,
-          ),
-        ));
-        _fetchSubjects();
-      },
+      itemCount: subjects.length,
     );
   }
 }
