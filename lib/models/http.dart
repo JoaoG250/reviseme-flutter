@@ -1,49 +1,30 @@
 import 'dart:convert';
 import 'package:logging/logging.dart';
+import 'package:reviseme/errors/http.dart';
 import 'package:http/http.dart' as http;
-
-class HttpError extends Error {
-  final int code;
-  final http.Response response;
-
-  HttpError(this.code, this.response);
-}
-
-class BadRequestError extends HttpError {
-  BadRequestError(http.Response response) : super(400, response);
-}
-
-class UnauthorizedError extends HttpError {
-  UnauthorizedError(http.Response response) : super(401, response);
-}
-
-class ForbiddenError extends HttpError {
-  ForbiddenError(http.Response response) : super(403, response);
-}
-
-class NotFoundError extends HttpError {
-  NotFoundError(http.Response response) : super(404, response);
-}
-
-class InternalServerError extends HttpError {
-  InternalServerError(http.Response response) : super(500, response);
-}
 
 class HttpClient {
   final String baseUrl;
-  late Map<String, String> headers;
-  late Uri _uri;
   final _logger = Logger('HttpClient');
+  final Map<String, String> _headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
+  };
+
+  late Uri _uri;
 
   HttpClient({
     required this.baseUrl,
-    this.headers = const {},
   }) {
     _uri = Uri.parse(baseUrl);
-    headers.putIfAbsent(
-      'Content-Type',
-      () => 'application/json; charset=utf-8',
-    );
+  }
+
+  void setAuthorizationToken(String token) {
+    _headers['Authorization'] = 'Token $token';
+  }
+
+  void removeAuthorizationToken() {
+    _headers.remove('Authorization');
   }
 
   bool _hasError(http.Response response) {
@@ -80,11 +61,11 @@ class HttpClient {
   }
 
   Map<String, String> _getHeaders(Map<String, String>? extraHeaders) {
-    final allHeaders = Map<String, String>.from(headers);
+    final headers = Map<String, String>.from(_headers);
     if (extraHeaders != null) {
-      allHeaders.addAll(extraHeaders);
+      headers.addAll(extraHeaders);
     }
-    return allHeaders;
+    return headers;
   }
 
   Uri _encodeUrl(String path, Map<String, dynamic>? params) {

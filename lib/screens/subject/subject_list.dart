@@ -4,6 +4,7 @@ import 'package:reviseme/models/subject.dart';
 import 'package:reviseme/screens/subject/subject_delete.dart';
 import 'package:reviseme/screens/subject/subject_modify.dart';
 import 'package:reviseme/services/subject.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SubjectList extends StatefulWidget {
   const SubjectList({Key? key}) : super(key: key);
@@ -19,8 +20,8 @@ class _SubjectListState extends State<SubjectList> {
 
   @override
   void initState() {
-    _fetchSubjects();
     super.initState();
+    _fetchSubjects();
   }
 
   _fetchSubjects() async {
@@ -35,11 +36,24 @@ class _SubjectListState extends State<SubjectList> {
     });
   }
 
+  void _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Subject List'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

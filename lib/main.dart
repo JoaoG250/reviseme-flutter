@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:reviseme/models/http.dart';
+import 'package:reviseme/screens/home.dart';
+import 'package:reviseme/screens/auth.dart';
 import 'package:reviseme/screens/subject/subject_list.dart';
+import 'package:reviseme/services/auth.dart';
 import 'package:reviseme/services/subject.dart';
 
 void initLocator() {
-  // TODO: Load token from local storage
-  const token = '6bee4e52bdfa02e7c03b76eaba84a1b9835c681b';
-  final headers = {'Authorization': 'Token $token'};
-  final apiClient =
-      HttpClient(baseUrl: 'http://192.168.0.100:8000/api/', headers: headers);
-  GetIt.I.registerSingleton<SubjectService>(SubjectService(apiClient));
+  const String baseUrl = 'http://192.168.0.100:8000/api/';
+
+  GetIt.I.registerSingleton(HttpClient(baseUrl: baseUrl));
+  GetIt.I.registerSingleton<AuthService>(AuthService());
+  GetIt.I.registerSingleton<SubjectService>(SubjectService());
 }
 
 void main() {
@@ -35,11 +37,16 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'ReviseMe',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SubjectList(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomeScreen(),
+        '/auth': (context) => const AuthScreen(),
+        '/subjects': (context) => const SubjectList(),
+      },
     );
   }
 }

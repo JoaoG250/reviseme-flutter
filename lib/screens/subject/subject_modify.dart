@@ -20,8 +20,8 @@ class _SubjectModifyState extends State<SubjectModify> {
 
   @override
   void initState() {
-    _fetchSubject();
     super.initState();
+    _fetchSubject();
   }
 
   void _fetchSubject() async {

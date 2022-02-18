@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/http.dart';
 import 'package:reviseme/models/subject.dart';
 
 class SubjectService {
-  final HttpClient client;
-
-  SubjectService(this.client);
+  HttpClient get client => GetIt.I<HttpClient>();
 
   Future<List<Subject>> getSubjects() async {
     final response = await client.get('subjects/');
