@@ -42,7 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
       prefs.setString('userEmail', meResponse.email);
       prefs.setString('userFirstName', meResponse.firstName);
 
-      Navigator.pushNamed(context, '/subjects');
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/subjects',
+        (route) => false,
+      );
     }
   }
 

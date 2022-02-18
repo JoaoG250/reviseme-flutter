@@ -57,6 +57,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save();
+      // TODO: handle http errors
       if (_authMode == AuthMode.login) {
         // Log user in
         final loginResponse = await service.login(_email!, _password!);
@@ -73,9 +74,10 @@ class _AuthScreenState extends State<AuthScreen> {
         final loginResponse = await service.login(_email!, _password!);
         _handleLoginSuccess(loginResponse.authToken);
       }
-      Navigator.pushNamed(
+      Navigator.pushNamedAndRemoveUntil(
         context,
         '/subjects',
+        (route) => false,
       );
     }
   }
