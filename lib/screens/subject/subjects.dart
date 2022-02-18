@@ -19,6 +19,7 @@ class _SubjectsState extends State<Subjects> {
   List<Subject> _subjects = [];
   bool _isLoading = false;
   int _selectedIndex = 0;
+  String _title = 'Subjects';
 
   @override
   void initState() {
@@ -45,12 +46,6 @@ class _SubjectsState extends State<Subjects> {
     Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   List<Widget> _subjectScreens() {
     return [
       SubjectList(
@@ -62,11 +57,25 @@ class _SubjectsState extends State<Subjects> {
     ];
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        _title = 'Subjects';
+        break;
+      case 1:
+        _title = 'Revision History';
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Subjects'),
+        title: Text(_title),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),

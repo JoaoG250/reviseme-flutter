@@ -7,6 +7,7 @@ import 'package:reviseme/screens/auth.dart';
 import 'package:reviseme/screens/subject/subjects.dart';
 import 'package:reviseme/services/auth.dart';
 import 'package:reviseme/services/subject.dart';
+import 'package:reviseme/services/topic.dart';
 
 void initLocator() {
   const String baseUrl = 'http://192.168.0.100:8000/api/';
@@ -14,6 +15,7 @@ void initLocator() {
   GetIt.I.registerSingleton(HttpClient(baseUrl: baseUrl));
   GetIt.I.registerSingleton<AuthService>(AuthService());
   GetIt.I.registerSingleton<SubjectService>(SubjectService());
+  GetIt.I.registerSingleton<TopicService>(TopicService());
 }
 
 void main() {
