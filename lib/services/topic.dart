@@ -29,6 +29,16 @@ class TopicService {
     await client.delete('topics/$topicId/');
   }
 
+  Future<TopicFile> createTopicFile(CreateTopicFileInput data) async {
+    final response = await client.sendFiles(
+      'topic-files/',
+      data.toJson(),
+      data.getFiles(),
+    );
+    final jsonData = json.decode(response.body);
+    return TopicFile.fromJson(jsonData);
+  }
+
   Future<List<Topic>> getTopics(Map<String, dynamic>? params) async {
     final response = await client.get('topics/', params: params);
     final jsonData = json.decode(response.body);

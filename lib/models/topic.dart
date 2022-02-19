@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:reviseme/models/subject.dart';
 
 class Topic {
@@ -67,6 +69,30 @@ class UpdateTopicInput extends CreateTopicInput {
         );
 }
 
+class CreateTopicFileInput {
+  final int topic;
+  final String fileType;
+  final String filePath;
+  late File file;
+
+  CreateTopicFileInput({
+    required this.topic,
+    required this.fileType,
+    required this.filePath,
+  }) {
+    file = File(filePath);
+  }
+
+  Map<String, String> toJson() => {
+        'topic': topic.toString(),
+        'fileType': fileType,
+      };
+
+  Map<String, File> getFiles() => {
+        'file': file,
+      };
+}
+
 class TopicRevision {
   final int id;
   final Topic topic;
@@ -94,4 +120,24 @@ class TopicRevision {
         complete = json['complete'],
         createdAt = json['createdAt'],
         updatedAt = json['updatedAt'];
+}
+
+class TopicFile {
+  final int id;
+  final Topic topic;
+  final String fileType;
+  final String file;
+
+  TopicFile({
+    required this.id,
+    required this.topic,
+    required this.fileType,
+    required this.file,
+  });
+
+  TopicFile.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        topic = Topic.fromJson(json['topic']),
+        fileType = json['fileType'],
+        file = json['file'];
 }

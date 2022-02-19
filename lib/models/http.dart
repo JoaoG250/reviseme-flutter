@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:logging/logging.dart';
+import 'package:mime/mime.dart';
 import 'package:reviseme/errors/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 
 class HttpClient {
@@ -18,6 +21,8 @@ class HttpClient {
   }) {
     _uri = Uri.parse(baseUrl);
   }
+
+  Map<String, String> get headers => _headers;
 
   void setAuthorizationToken(String token) {
     _headers['Authorization'] = 'Token $token';
@@ -68,7 +73,7 @@ class HttpClient {
     return headers;
   }
 
-  Uri _encodeUrl(String path, Map<String, dynamic>? params) {
+  Uri encodeUrl(String path, [Map<String, dynamic>? params]) {
     final url = _uri.resolve(path);
 
     if (params == null) {
@@ -84,7 +89,7 @@ class HttpClient {
     Map<String, String>? headers,
   }) async {
     final response = await http.get(
-      _encodeUrl(path, params),
+      encodeUrl(path, params),
       headers: _getHeaders(headers),
     );
     return _checkRespose(response);
@@ -97,7 +102,7 @@ class HttpClient {
     Map<String, String>? headers,
   }) async {
     final response = await http.post(
-      _encodeUrl(path, params),
+      encodeUrl(path, params),
       body: json.encode(body),
       headers: _getHeaders(headers),
     );
@@ -111,7 +116,7 @@ class HttpClient {
     Map<String, String>? headers,
   }) async {
     final response = await http.put(
-      _encodeUrl(path, params),
+      encodeUrl(path, params),
       body: json.encode(body),
       headers: _getHeaders(headers),
     );
@@ -124,9 +129,58 @@ class HttpClient {
     Map<String, String>? headers,
   }) async {
     final response = await http.delete(
-      _encodeUrl(path, params),
+      encodeUrl(path, params),
       headers: _getHeaders(headers),
     );
+    return _checkRespose(response);
+  }
+
+  Future<http.Response> sendFiles(
+    String path,
+    Map<String, String> body,
+    Map<String, File> files, {
+    Map<String, String>? headers,
+  }) async {
+    final request = http.MultipartRequest(
+      'POST',
+      encodeUrl(path),
+    );
+    // Add headers to the request
+    request.headers.addAll(
+      _getHeaders(headers),
+    );
+
+    // Add body fields to the request
+    request.fields.addAll(body);
+
+    // Add files to the request
+    for (final file in files.entries) {
+      // Get mimetype of the file
+      final mimeType = lookupMimeType(file.value.path);
+
+      // Create MediaType from mimetype
+      MediaType? fileType;
+      if (mimeType != null) {
+        final type = mimeType.split('/')[0];
+        final subtype = mimeType.split('/')[1];
+        fileType = MediaType(type, subtype);
+      }
+
+      // Get file name from path
+      final fileName = file.value.path.split('/').last;
+
+      final fileField = http.MultipartFile.fromBytes(
+        file.key,
+        await file.value.readAsBytes(),
+        contentType: fileType ?? MediaType('application', 'octet-stream'),
+        filename: fileName,
+      );
+      request.files.add(fileField);
+    }
+
+    // Send the request
+    final result = await request.send();
+    final response = await http.Response.fromStream(result);
     return _checkRespose(response);
   }
 }

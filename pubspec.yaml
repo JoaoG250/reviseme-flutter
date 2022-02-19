@@ -38,6 +38,8 @@ dependencies:
   get_it: ^7.2.0
   logging: ^1.0.2
   shared_preferences: ^2.0.13
+  file_picker: ^4.4.0
+  mime: ^1.0.1
 
 dev_dependencies:
   flutter_test:
