@@ -6,6 +6,7 @@ import 'package:reviseme/screens/root.dart';
 import 'package:reviseme/screens/auth.dart';
 import 'package:reviseme/screens/home.dart';
 import 'package:reviseme/screens/subject.dart';
+import 'package:reviseme/screens/topic.dart';
 import 'package:reviseme/services/auth.dart';
 import 'package:reviseme/services/subject.dart';
 import 'package:reviseme/services/topic.dart';
@@ -50,6 +51,7 @@ class App extends StatelessWidget {
         AuthScreen.routeName: (context) => const AuthScreen(),
         HomeScreen.routeName: (context) => const HomeScreen(),
         SubjectScreen.routeName: (context) => const SubjectScreen(),
+        TopicScreen.routeName: (context) => const TopicScreen(),
       },
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/subject.dart';
 import 'package:reviseme/models/topic.dart';
+import 'package:reviseme/screens/topic.dart';
 import 'package:reviseme/services/topic.dart';
 import 'package:reviseme/widgets/list.dart';
 import 'package:reviseme/widgets/topic/topic_modify.dart';
@@ -65,11 +66,11 @@ class _SubjectTopicsState extends State<SubjectTopics> {
           },
         ),
         onTap: () async {
-          // Navigator.pushNamed(
-          //   context,
-          //   SubjectScreen.routeName,
-          //   arguments: SubjectScreenArguments(_topics[index].id),
-          // );
+          Navigator.pushNamed(
+            context,
+            TopicScreen.routeName,
+            arguments: TopicScreenArguments(_topics[index].id),
+          );
         },
       ),
     );
