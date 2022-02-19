@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/http.dart';
 import 'package:reviseme/screens/auth.dart';
-import 'package:reviseme/screens/daily_revisions.dart';
-import 'package:reviseme/screens/revision_history.dart';
-import 'package:reviseme/screens/subject/subject_list.dart';
+import 'package:reviseme/widgets/daily_revisions.dart';
+import 'package:reviseme/widgets/revision_history.dart';
+import 'package:reviseme/widgets/subject/subject_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {

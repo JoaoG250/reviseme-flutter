@@ -5,7 +5,7 @@ import 'package:reviseme/models/http.dart';
 import 'package:reviseme/screens/root.dart';
 import 'package:reviseme/screens/auth.dart';
 import 'package:reviseme/screens/home.dart';
-import 'package:reviseme/screens/subject/subject.dart';
+import 'package:reviseme/screens/subject.dart';
 import 'package:reviseme/services/auth.dart';
 import 'package:reviseme/services/subject.dart';
 import 'package:reviseme/services/topic.dart';

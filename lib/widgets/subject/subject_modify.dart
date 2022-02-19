@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/subject.dart';
-import 'package:reviseme/screens/subject/subject_form.dart';
+import 'package:reviseme/widgets/subject/subject_form.dart';
 import 'package:reviseme/services/subject.dart';
 
 class SubjectModify extends StatefulWidget {
