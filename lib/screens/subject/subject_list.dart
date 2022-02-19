@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/subject.dart';
 import 'package:reviseme/screens/subject/subject_delete.dart';
 import 'package:reviseme/screens/subject/subject_modify.dart';
+import 'package:reviseme/screens/subject/subject_revisions.dart';
 import 'package:reviseme/services/subject.dart';
 
 class SubjectList extends StatefulWidget {
@@ -39,17 +40,29 @@ class _SubjectListState extends State<SubjectList> {
     BuildContext context,
     int index,
   ) {
-    return ListTile(
-      title: Text(_subjects[index].name),
-      subtitle: Text(_subjects[index].description),
-      onTap: () async {
-        await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SubjectModify(
-            subjectId: _subjects[index].id,
-          ),
-        ));
-        _fetchSubjects();
-      },
+    return Card(
+      child: ListTile(
+        title: Text(_subjects[index].name),
+        subtitle: Text(_subjects[index].description),
+        onTap: () async {
+          Navigator.pushNamed(
+            context,
+            SubjectRevisionsScreen.routeName,
+            arguments: SubjectRevisionsScreenArguments(_subjects[index].id),
+          );
+        },
+        trailing: IconButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () async {
+            await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SubjectModify(
+                subjectId: _subjects[index].id,
+              ),
+            ));
+            _fetchSubjects();
+          },
+        ),
+      ),
     );
   }
 
@@ -88,7 +101,10 @@ class _SubjectListState extends State<SubjectList> {
   Widget _buildList() {
     return ListView.separated(
       itemBuilder: _buildListItem,
-      separatorBuilder: (context, index) => const Divider(height: 1),
+      separatorBuilder: (context, index) => const Divider(
+        height: 5,
+        color: Colors.transparent,
+      ),
       itemCount: _subjects.length,
     );
   }

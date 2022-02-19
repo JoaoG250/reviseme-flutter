@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/http.dart';
+import 'package:reviseme/screens/auth.dart';
+import 'package:reviseme/screens/home.dart';
 import 'package:reviseme/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Root extends StatefulWidget {
   const Root({Key? key}) : super(key: key);
+  static const routeName = '/';
 
   @override
   State<Root> createState() => _RootState();
@@ -28,7 +31,7 @@ class _RootState extends State<Root> {
     if (token == null) {
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/auth',
+        AuthScreen.routeName,
         (route) => false,
       );
     } else {
@@ -44,7 +47,7 @@ class _RootState extends State<Root> {
 
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/home',
+        HomeScreen.routeName,
         (route) => false,
       );
     }

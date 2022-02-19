@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/http.dart';
+import 'package:reviseme/screens/home.dart';
 import 'package:reviseme/services/auth.dart';
 import 'package:reviseme/utils/valitators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ enum AuthMode {
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
+  static const routeName = '/auth';
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -76,7 +78,7 @@ class _AuthScreenState extends State<AuthScreen> {
       }
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/home',
+        HomeScreen.routeName,
         (route) => false,
       );
     }
