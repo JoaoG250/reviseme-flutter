@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:reviseme/models/http.dart';
+import 'package:reviseme/screens/daily_revisions.dart';
 import 'package:reviseme/screens/revision_history.dart';
 import 'package:reviseme/screens/subject/subject_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,17 +14,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   String _title = 'Subjects';
 
   void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
 
+    // Remove token from api client singleton
+    HttpClient apiClient = GetIt.I<HttpClient>();
+    apiClient.removeAuthorizationToken();
+
     Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
   }
 
   static const _screens = <Widget>[
+    DailyRevisions(),
     SubjectList(),
     RevisionHistory(),
   ];
@@ -32,9 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     switch (index) {
       case 0:
-        _title = 'Subjects';
+        _title = 'Daily Revisions';
         break;
       case 1:
+        _title = 'Subjects';
+        break;
+      case 2:
         _title = 'Revision History';
         break;
     }
@@ -55,6 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _screens.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.today),
+            label: 'Daily Revisions',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'Subjects',

@@ -21,4 +21,28 @@ class TopicService {
     }
     return topicRevisionHistory;
   }
+
+  Future<List<TopicRevision>> getDailyTopicRevisions() async {
+    // Get the current date in the format YYYY-MM-DD
+    final currentDate = DateTime.now().toString().substring(0, 10);
+    final response = await client.get(
+      'topic-revisions/',
+      params: {
+        'revision_date__lte': currentDate,
+        'complete': 'false',
+      },
+    );
+    final jsonData = json.decode(response.body);
+    final List<TopicRevision> dailyTopicRevisions = [];
+    for (final topicRevision in jsonData) {
+      dailyTopicRevisions.add(TopicRevision.fromJson(topicRevision));
+    }
+    return dailyTopicRevisions;
+  }
+
+  Future<double> getTopicRevisionsProgress() async {
+    final response = await client.get('topics/revision_progress/');
+    final jsonData = json.decode(response.body);
+    return jsonData['progress'];
+  }
 }
