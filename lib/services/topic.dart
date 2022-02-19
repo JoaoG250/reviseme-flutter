@@ -7,6 +7,17 @@ import 'package:reviseme/models/topic.dart';
 class TopicService {
   HttpClient get client => GetIt.I<HttpClient>();
 
+  Future<List<TopicRevision>> getTopicRevisions(
+      Map<String, dynamic>? params) async {
+    final response = await client.get('topic-revisions/', params: params);
+    final jsonData = json.decode(response.body);
+    final List<TopicRevision> topicRevisions = [];
+    for (final topicRevision in jsonData) {
+      topicRevisions.add(TopicRevision.fromJson(topicRevision));
+    }
+    return topicRevisions;
+  }
+
   Future<List<TopicRevision>> getTopicRevisionHistory() async {
     final response = await client.get(
       'topic-revisions/',

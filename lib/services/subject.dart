@@ -39,4 +39,10 @@ class SubjectService {
   Future<void> deleteSubject(int subjectId) async {
     await client.delete('subjects/$subjectId/');
   }
+
+  Future<double> getSubjectRevisionProgress(int subjectId) async {
+    final response = await client.get('subjects/$subjectId/revision_progress/');
+    final jsonData = json.decode(response.body);
+    return jsonData['progress'];
+  }
 }
