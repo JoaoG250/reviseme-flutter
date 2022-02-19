@@ -19,6 +19,10 @@ class TopicRevisionList extends StatelessWidget {
         title: Text(revisions[index].topic.name),
         subtitle: Text(revisions[index].revisionDate),
         leading: const ListLeadingIcon(icon: Icons.today),
+        trailing: Checkbox(
+          value: revisions[index].complete,
+          onChanged: null,
+        ),
       ),
     );
   }

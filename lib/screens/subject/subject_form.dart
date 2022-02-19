@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reviseme/models/subject.dart';
 import 'package:reviseme/services/subject.dart';
+import 'package:reviseme/utils/valitators.dart';
 
 class SubjectForm extends StatefulWidget {
   final Subject? subject;
@@ -20,6 +21,29 @@ class _SubjectFormState extends State<SubjectForm> {
   String? name;
   String? description;
 
+  void _submit(BuildContext context) async {
+    final form = _formKey.currentState;
+
+    // Check if form is valid
+    if (form!.validate()) {
+      // Call save event
+      form.save();
+      if (widget.subject != null) {
+        // If subject is not null, it means we are editing
+        final input =
+            UpdateSubjectInput(name: name!, description: description!);
+        await widget.service.updateSubject(widget.subject!.id, input);
+      } else {
+        // If subject is null, it means we are creating
+        final input =
+            CreateSubjectInput(name: name!, description: description!);
+        await widget.service.createSubject(input);
+      }
+      // Navigate back to subjects page
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -32,12 +56,7 @@ class _SubjectFormState extends State<SubjectForm> {
               hintText: 'Subject Name',
               labelText: 'Name',
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Subject name is required';
-              }
-              return null;
-            },
+            validator: (value) => requiredValidator(value, 'Subject name'),
             onSaved: (value) => name = value,
           ),
           TextFormField(
@@ -46,12 +65,8 @@ class _SubjectFormState extends State<SubjectForm> {
               hintText: 'Subject Description',
               labelText: 'Description',
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Subject description is required';
-              }
-              return null;
-            },
+            validator: (value) =>
+                requiredValidator(value, 'Subject description'),
             onSaved: (value) => description = value,
           ),
           ElevatedButton(
@@ -63,22 +78,5 @@ class _SubjectFormState extends State<SubjectForm> {
         ],
       ),
     );
-  }
-
-  void _submit(BuildContext context) async {
-    final form = _formKey.currentState;
-    if (form!.validate()) {
-      form.save();
-      if (widget.subject != null) {
-        final input =
-            UpdateSubjectInput(name: name!, description: description!);
-        await widget.service.updateSubject(widget.subject!.id, input);
-      } else {
-        final input =
-            CreateSubjectInput(name: name!, description: description!);
-        await widget.service.createSubject(input);
-      }
-      Navigator.of(context).pop();
-    }
   }
 }

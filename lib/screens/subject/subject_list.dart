@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/subject.dart';
 import 'package:reviseme/screens/subject/subject.dart';
-import 'package:reviseme/screens/subject/subject_delete.dart';
 import 'package:reviseme/screens/subject/subject_modify.dart';
 import 'package:reviseme/services/subject.dart';
 import 'package:reviseme/widgets/list.dart';
@@ -77,7 +76,7 @@ class _SubjectListState extends State<SubjectList> {
       confirmDismiss: (direction) async {
         final result = await showDialog(
           context: context,
-          builder: (context) => const SubjectDelete(),
+          builder: (context) => const ListItemDeleteConfirm(),
         );
 
         if (result == true) {

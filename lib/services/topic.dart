@@ -7,6 +7,38 @@ import 'package:reviseme/models/topic.dart';
 class TopicService {
   HttpClient get client => GetIt.I<HttpClient>();
 
+  Future<Topic> getTopic(int topicId) async {
+    final response = await client.get('topics/$topicId/');
+    final jsonData = json.decode(response.body);
+    return Topic.fromJson(jsonData);
+  }
+
+  Future<Topic> createTopic(CreateTopicInput data) async {
+    final response = await client.post('topics/', data.toJson());
+    final jsonData = json.decode(response.body);
+    return Topic.fromJson(jsonData);
+  }
+
+  Future<Topic> updateTopic(int topicId, UpdateTopicInput data) async {
+    final response = await client.put('topics/$topicId/', data.toJson());
+    final jsonData = json.decode(response.body);
+    return Topic.fromJson(jsonData);
+  }
+
+  Future<void> deleteTopic(int topicId) async {
+    await client.delete('topics/$topicId/');
+  }
+
+  Future<List<Topic>> getTopics(Map<String, dynamic>? params) async {
+    final response = await client.get('topics/', params: params);
+    final jsonData = json.decode(response.body);
+    final List<Topic> topics = [];
+    for (final topic in jsonData) {
+      topics.add(Topic.fromJson(topic));
+    }
+    return topics;
+  }
+
   Future<List<TopicRevision>> getTopicRevisions(
       Map<String, dynamic>? params) async {
     final response = await client.get('topic-revisions/', params: params);

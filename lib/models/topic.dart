@@ -32,6 +32,41 @@ class Topic {
         updatedAt = json['updatedAt'];
 }
 
+class CreateTopicInput {
+  final int subject;
+  final String name;
+  final String description;
+  final String? image;
+
+  CreateTopicInput({
+    required this.subject,
+    required this.name,
+    required this.description,
+    this.image,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'subject': subject,
+        'name': name,
+        'description': description,
+        if (image != null) 'image': image,
+      };
+}
+
+class UpdateTopicInput extends CreateTopicInput {
+  UpdateTopicInput({
+    required int subject,
+    required String name,
+    required String description,
+    String? image,
+  }) : super(
+          subject: subject,
+          name: name,
+          description: description,
+          image: image,
+        );
+}
+
 class TopicRevision {
   final int id;
   final Topic topic;
