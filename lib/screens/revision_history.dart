@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
+import 'package:reviseme/widgets/list.dart';
 
 class RevisionHistory extends StatefulWidget {
   const RevisionHistory({Key? key}) : super(key: key);
@@ -37,12 +38,13 @@ class _RevisionHistoryState extends State<RevisionHistory> {
     BuildContext context,
     int index,
   ) {
-    return ListTile(
-      title: Text(_revisions[index].topic.name),
-      subtitle: Text(_revisions[index].updatedAt),
-      onTap: () async {
-        _fetchTopicRevisions();
-      },
+    final _updatedAt = DateTime.parse(_revisions[index].updatedAt);
+    return PaddedListItem(
+      child: ListTile(
+        title: Text(_revisions[index].topic.name),
+        subtitle: Text(_updatedAt.toString().substring(0, 10)),
+        leading: const ListLeadingIcon(icon: Icons.history),
+      ),
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
 import 'package:reviseme/styles/styles.dart';
+import 'package:reviseme/widgets/list.dart';
 
 class DailyRevisions extends StatefulWidget {
   const DailyRevisions({Key? key}) : super(key: key);
@@ -41,10 +42,12 @@ class _DailyRevisionsState extends State<DailyRevisions> {
     BuildContext context,
     int index,
   ) {
-    return ListTile(
-      title: Text(_revisions[index].topic.name),
-      subtitle: Text(_revisions[index].revisionDate),
-      onTap: () {},
+    return PaddedListItem(
+      child: ListTile(
+        title: Text(_revisions[index].topic.name),
+        subtitle: Text(_revisions[index].revisionDate),
+        leading: const ListLeadingIcon(icon: Icons.today),
+      ),
     );
   }
 

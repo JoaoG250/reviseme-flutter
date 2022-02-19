@@ -5,6 +5,7 @@ import 'package:reviseme/screens/subject/subject_delete.dart';
 import 'package:reviseme/screens/subject/subject_modify.dart';
 import 'package:reviseme/screens/subject/subject_revisions.dart';
 import 'package:reviseme/services/subject.dart';
+import 'package:reviseme/widgets/list.dart';
 
 class SubjectList extends StatefulWidget {
   const SubjectList({Key? key}) : super(key: key);
@@ -40,17 +41,11 @@ class _SubjectListState extends State<SubjectList> {
     BuildContext context,
     int index,
   ) {
-    return Card(
+    return PaddedListItem(
       child: ListTile(
         title: Text(_subjects[index].name),
         subtitle: Text(_subjects[index].description),
-        onTap: () async {
-          Navigator.pushNamed(
-            context,
-            SubjectRevisionsScreen.routeName,
-            arguments: SubjectRevisionsScreenArguments(_subjects[index].id),
-          );
-        },
+        leading: const ListLeadingIcon(icon: Icons.book),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () async {
@@ -62,6 +57,13 @@ class _SubjectListState extends State<SubjectList> {
             _fetchSubjects();
           },
         ),
+        onTap: () async {
+          Navigator.pushNamed(
+            context,
+            SubjectRevisionsScreen.routeName,
+            arguments: SubjectRevisionsScreenArguments(_subjects[index].id),
+          );
+        },
       ),
     );
   }
@@ -71,13 +73,7 @@ class _SubjectListState extends State<SubjectList> {
       key: ValueKey(_subjects[index].id),
       child: _buildSubjectTile(context, index),
       direction: DismissDirection.startToEnd,
-      background: Container(
-        color: Colors.red,
-        child: const ListTile(
-          leading: Icon(Icons.delete, color: Colors.white),
-        ),
-      ),
-      onDismissed: (direction) {},
+      background: const DismissibleBackground(),
       confirmDismiss: (direction) async {
         final result = await showDialog(
           context: context,
@@ -101,10 +97,7 @@ class _SubjectListState extends State<SubjectList> {
   Widget _buildList() {
     return ListView.separated(
       itemBuilder: _buildListItem,
-      separatorBuilder: (context, index) => const Divider(
-        height: 5,
-        color: Colors.transparent,
-      ),
+      separatorBuilder: (context, index) => const Divider(height: 1),
       itemCount: _subjects.length,
     );
   }
