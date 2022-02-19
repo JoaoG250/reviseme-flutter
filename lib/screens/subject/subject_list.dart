@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/subject.dart';
+import 'package:reviseme/screens/subject/subject.dart';
 import 'package:reviseme/screens/subject/subject_delete.dart';
 import 'package:reviseme/screens/subject/subject_modify.dart';
-import 'package:reviseme/screens/subject/subject_revisions.dart';
 import 'package:reviseme/services/subject.dart';
 import 'package:reviseme/widgets/list.dart';
 
@@ -60,8 +60,8 @@ class _SubjectListState extends State<SubjectList> {
         onTap: () async {
           Navigator.pushNamed(
             context,
-            SubjectRevisionsScreen.routeName,
-            arguments: SubjectRevisionsScreenArguments(_subjects[index].id),
+            SubjectScreen.routeName,
+            arguments: SubjectScreenArguments(_subjects[index].id),
           );
         },
       ),

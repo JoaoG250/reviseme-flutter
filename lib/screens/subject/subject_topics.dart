@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:reviseme/models/subject.dart';
 
-class SubjectRevisions extends StatefulWidget {
+class SubjectTopics extends StatefulWidget {
   final Subject subject;
 
-  const SubjectRevisions({
+  const SubjectTopics({
     Key? key,
     required this.subject,
   }) : super(key: key);
 
   @override
-  _SubjectRevisionsState createState() => _SubjectRevisionsState();
+  _SubjectTopicsState createState() => _SubjectTopicsState();
 }
 
-class _SubjectRevisionsState extends State<SubjectRevisions> {
+class _SubjectTopicsState extends State<SubjectTopics> {
   @override
   Widget build(BuildContext context) {
     return Center(
