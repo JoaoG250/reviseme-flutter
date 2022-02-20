@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
-import 'package:reviseme/widgets/topic/create_material.dart';
+import 'package:reviseme/widgets/topic/topic_images.dart';
 import 'package:reviseme/widgets/topic/topic_description.dart';
 
 class TopicScreenArguments {
@@ -27,7 +27,7 @@ class _TopicScreenState extends State<TopicScreen> {
   List<Widget> _screens(Topic topic) {
     return [
       TopicDescription(topic: topic),
-      CreateMaterial(topic: topic),
+      TopicImages(topic: topic),
     ];
   }
 
@@ -40,7 +40,7 @@ class _TopicScreenState extends State<TopicScreen> {
         _title = 'Topic Description';
         break;
       case 1:
-        _title = 'Create Study Material';
+        _title = 'Topic Images';
         break;
     }
   }
@@ -78,8 +78,8 @@ class _TopicScreenState extends State<TopicScreen> {
             label: 'Description',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Create Study Material',
+            icon: Icon(Icons.image),
+            label: 'Topic images',
           ),
         ],
         currentIndex: _selectedIndex,

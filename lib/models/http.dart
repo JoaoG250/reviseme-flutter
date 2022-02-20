@@ -85,7 +85,7 @@ class HttpClient {
 
   Future<http.Response> get(
     String path, {
-    Map<String, dynamic>? params,
+    Map<String, String>? params,
     Map<String, String>? headers,
   }) async {
     final response = await http.get(
@@ -98,7 +98,7 @@ class HttpClient {
   Future<http.Response> post(
     String path,
     Map<String, dynamic> body, {
-    Map<String, dynamic>? params,
+    Map<String, String>? params,
     Map<String, String>? headers,
   }) async {
     final response = await http.post(
@@ -112,7 +112,7 @@ class HttpClient {
   Future<http.Response> put(
     String path,
     Map<String, dynamic> body, {
-    Map<String, dynamic>? params,
+    Map<String, String>? params,
     Map<String, String>? headers,
   }) async {
     final response = await http.put(
@@ -125,7 +125,7 @@ class HttpClient {
 
   Future<http.Response> delete(
     String path, {
-    Map<String, dynamic>? params,
+    Map<String, String>? params,
     Map<String, String>? headers,
   }) async {
     final response = await http.delete(

@@ -39,7 +39,7 @@ class TopicService {
     return TopicFile.fromJson(jsonData);
   }
 
-  Future<List<Topic>> getTopics(Map<String, dynamic>? params) async {
+  Future<List<Topic>> getTopics(Map<String, String>? params) async {
     final response = await client.get('topics/', params: params);
     final jsonData = json.decode(response.body);
     final List<Topic> topics = [];
@@ -50,7 +50,7 @@ class TopicService {
   }
 
   Future<List<TopicRevision>> getTopicRevisions(
-      Map<String, dynamic>? params) async {
+      Map<String, String>? params) async {
     final response = await client.get('topic-revisions/', params: params);
     final jsonData = json.decode(response.body);
     final List<TopicRevision> topicRevisions = [];
@@ -97,5 +97,21 @@ class TopicService {
     final response = await client.get('topics/revision_progress/');
     final jsonData = json.decode(response.body);
     return jsonData['progress'];
+  }
+
+  Future<List<TopicFile>> getTopicImages(int topicId) async {
+    final response = await client.get(
+      'topic-files/',
+      params: {
+        'topic': topicId.toString(),
+        'file_type': 'IMAGE',
+      },
+    );
+    final jsonData = json.decode(response.body);
+    final List<TopicFile> topicFiles = [];
+    for (final topicFile in jsonData) {
+      topicFiles.add(TopicFile.fromJson(topicFile));
+    }
+    return topicFiles;
   }
 }
