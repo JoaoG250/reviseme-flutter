@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
 import 'package:reviseme/widgets/image.dart';
+import 'package:reviseme/widgets/list.dart';
 import 'package:reviseme/widgets/topic/topic_image_create.dart';
 
 class TopicImages extends StatefulWidget {
@@ -42,25 +43,57 @@ class _TopicImagesState extends State<TopicImages> {
     });
   }
 
+  Widget _buildListItem(int index) {
+    final dismissDirection = index % 2 == 0
+        ? DismissDirection.endToStart
+        : DismissDirection.startToEnd;
+    final file = _files[index];
+    return GestureDetector(
+      onTap: () async {
+        await showDialog(
+          context: context,
+          builder: (context) => ImageDialog(imageUrl: file.file),
+        );
+      },
+      child: Dismissible(
+        key: ValueKey(file.id),
+        direction: dismissDirection,
+        child: Card(
+          child: Image.network(file.file, fit: BoxFit.cover),
+        ),
+        confirmDismiss: (direction) async {
+          final result = await showDialog(
+            context: context,
+            builder: (context) => const ListItemDeleteConfirm(),
+          );
+
+          if (result == true) {
+            await service.deleteTopicFile(file.id);
+
+            // Remove the item from _files
+            setState(() {
+              _files.removeAt(index);
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('File deleted'),
+              ),
+            );
+          }
+
+          return result;
+        },
+      ),
+    );
+  }
+
   Widget _buildGrid() {
     return GridView.count(
       crossAxisCount: 2,
       children: List.generate(
         _files.length,
-        (index) {
-          final topicFile = _files[index];
-          return GestureDetector(
-            onTap: () async {
-              await showDialog(
-                context: context,
-                builder: (context) => ImageDialog(imageUrl: topicFile.file),
-              );
-            },
-            child: Card(
-              child: Image.network(topicFile.file, fit: BoxFit.cover),
-            ),
-          );
-        },
+        (index) => _buildListItem(index),
       ),
     );
   }
