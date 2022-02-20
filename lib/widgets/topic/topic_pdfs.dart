@@ -43,10 +43,10 @@ class _TopicPdfsState extends State<TopicPdfs> {
     });
   }
 
-  Widget _buildCard(TopicFile file) {
+  Widget _buildListTile(TopicFile file) {
     final fileName = file.file.split('/').last;
     final _updatedAt = DateTime.parse(file.updatedAt);
-    return Card(
+    return PaddedListItem(
       child: ListTile(
         title: Text(fileName),
         subtitle: Text(_updatedAt.toString().substring(0, 10)),
@@ -67,13 +67,38 @@ class _TopicPdfsState extends State<TopicPdfs> {
     );
   }
 
-  Widget _buildPDFList() {
-    return ListView.builder(
-      itemCount: _files.length,
-      itemBuilder: (context, index) {
-        return PaddedListItem(
-          child: _buildCard(_files[index]),
+  Widget _buildListItem(TopicFile file) {
+    return Dismissible(
+      key: ValueKey(file.id),
+      child: _buildListTile(file),
+      direction: DismissDirection.startToEnd,
+      background: const DismissibleBackground(),
+      confirmDismiss: (direction) async {
+        final result = await showDialog(
+          context: context,
+          builder: (context) => const ListItemDeleteConfirm(),
         );
+
+        if (result == true) {
+          await service.deleteTopicFile(file.id);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('File deleted'),
+            ),
+          );
+        }
+
+        return result;
+      },
+    );
+  }
+
+  Widget _buildPDFList() {
+    return ListView.separated(
+      itemCount: _files.length,
+      separatorBuilder: (context, index) => const Divider(height: 1),
+      itemBuilder: (context, index) {
+        return _buildListItem(_files[index]);
       },
     );
   }

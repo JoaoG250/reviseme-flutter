@@ -41,7 +41,7 @@ class _TopicScreenState extends State<TopicScreen> {
     });
     switch (index) {
       case 0:
-        _title = 'Topic Description';
+        _title = 'Topic Information';
         break;
       case 1:
         _title = 'Topic PDFs';
@@ -84,8 +84,8 @@ class _TopicScreenState extends State<TopicScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.description),
-            label: 'Description',
+            icon: Icon(Icons.info),
+            label: 'Info',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.picture_as_pdf),
@@ -93,7 +93,7 @@ class _TopicScreenState extends State<TopicScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.image),
-            label: 'Topic images',
+            label: 'Images',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.link),
