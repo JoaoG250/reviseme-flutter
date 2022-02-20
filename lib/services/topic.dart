@@ -108,4 +108,24 @@ class TopicService {
     }
     return topicFiles;
   }
+
+  Future<List<TopicLink>> getTopicLinks(Map<String, String>? params) async {
+    final response = await client.get('topic-links/', params: params);
+    final jsonData = json.decode(response.body);
+    final List<TopicLink> topicLinks = [];
+    for (final topicLink in jsonData) {
+      topicLinks.add(TopicLink.fromJson(topicLink));
+    }
+    return topicLinks;
+  }
+
+  Future<TopicLink> createTopicLink(CreateTopicLinkInput data) async {
+    final response = await client.post('topic-links/', data.toJson());
+    final jsonData = json.decode(response.body);
+    return TopicLink.fromJson(jsonData);
+  }
+
+  Future<void> deleteTopicLink(int topicLinkId) async {
+    await client.delete('topic-links/$topicLinkId/');
+  }
 }

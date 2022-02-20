@@ -147,3 +147,47 @@ class TopicFile {
         createdAt = json['createdAt'],
         updatedAt = json['updatedAt'];
 }
+
+class TopicLink {
+  final int id;
+  final Topic topic;
+  final String title;
+  final String url;
+  final String createdAt;
+  final String updatedAt;
+
+  TopicLink({
+    required this.id,
+    required this.topic,
+    required this.title,
+    required this.url,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  TopicLink.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        topic = Topic.fromJson(json['topic']),
+        title = json['title'],
+        url = json['url'],
+        createdAt = json['createdAt'],
+        updatedAt = json['updatedAt'];
+}
+
+class CreateTopicLinkInput {
+  final int topic;
+  final String title;
+  final String url;
+
+  CreateTopicLinkInput({
+    required this.topic,
+    required this.title,
+    required this.url,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'topic': topic,
+        'title': title,
+        'url': url,
+      };
+}

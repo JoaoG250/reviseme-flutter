@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:reviseme/errors/http.dart';
 import 'package:reviseme/models/http.dart';
 import 'package:reviseme/screens/auth.dart';
 import 'package:reviseme/screens/home.dart';
 import 'package:reviseme/services/auth.dart';
+import 'package:reviseme/utils/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Root extends StatefulWidget {
@@ -39,11 +41,17 @@ class _RootState extends State<Root> {
       HttpClient apiClient = GetIt.I<HttpClient>();
       apiClient.setAuthorizationToken(token);
 
-      // Update user info in shared preferences
-      final meResponse = await service.me();
-      prefs.setInt('userId', meResponse.id);
-      prefs.setString('userEmail', meResponse.email);
-      prefs.setString('userFirstName', meResponse.firstName);
+      try {
+        // Update user info in shared preferences
+        final meResponse = await service.me();
+        prefs.setInt('userId', meResponse.id);
+        prefs.setString('userEmail', meResponse.email);
+        prefs.setString('userFirstName', meResponse.firstName);
+      } on UnauthorizedError {
+        await logout(context);
+      } on ForbiddenError {
+        await logout(context);
+      }
 
       Navigator.pushNamedAndRemoveUntil(
         context,

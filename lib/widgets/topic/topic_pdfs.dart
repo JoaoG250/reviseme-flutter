@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
+import 'package:reviseme/widgets/list.dart';
 import 'package:reviseme/widgets/topic/topic_pdf_create.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,40 +43,36 @@ class _TopicPdfsState extends State<TopicPdfs> {
     });
   }
 
+  Widget _buildCard(TopicFile file) {
+    final fileName = file.file.split('/').last;
+    final _updatedAt = DateTime.parse(file.updatedAt);
+    return Card(
+      child: ListTile(
+        title: Text(fileName),
+        subtitle: Text(_updatedAt.toString().substring(0, 10)),
+        leading: const ListLeadingIcon(icon: Icons.picture_as_pdf),
+        onTap: () async {
+          final url = file.file;
+          if (await canLaunch(url)) {
+            await launch(url);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Could not open this file'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
   Widget _buildPDFList() {
     return ListView.builder(
       itemCount: _files.length,
       itemBuilder: (context, index) {
-        final file = _files[index];
-        final fileName = file.file.split('/').last;
-        final _updatedAt = DateTime.parse(file.updatedAt);
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 5,
-          ),
-          child: Card(
-            child: ListTile(
-              title: Text(fileName),
-              subtitle: Text(
-                file.file,
-                style: const TextStyle(fontSize: 10),
-              ),
-              trailing: Text(_updatedAt.toString().substring(0, 10)),
-              onTap: () async {
-                final url = file.file;
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Could not open this file'),
-                    ),
-                  );
-                }
-              },
-            ),
-          ),
+        return PaddedListItem(
+          child: _buildCard(_files[index]),
         );
       },
     );

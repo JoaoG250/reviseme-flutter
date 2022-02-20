@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:reviseme/models/http.dart';
-import 'package:reviseme/screens/auth.dart';
+import 'package:reviseme/utils/auth.dart';
 import 'package:reviseme/widgets/daily_revisions.dart';
 import 'package:reviseme/widgets/revision_history.dart';
 import 'package:reviseme/widgets/subject/subject_list.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,20 +15,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 1;
   String _title = 'Subjects';
-
-  void _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-
-    // Remove token from api client singleton
-    HttpClient apiClient = GetIt.I<HttpClient>();
-    apiClient.removeAuthorizationToken();
-
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      AuthScreen.routeName,
-      (route) => false,
-    );
-  }
 
   static const _screens = <Widget>[
     DailyRevisions(),
@@ -64,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: _logout,
+            onPressed: () => logout(context),
           ),
         ],
       ),
