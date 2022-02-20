@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
 import 'package:reviseme/widgets/topic/topic_images.dart';
-import 'package:reviseme/widgets/topic/topic_description.dart';
+import 'package:reviseme/widgets/topic/topic_info.dart';
 import 'package:reviseme/widgets/topic/topic_links.dart';
 import 'package:reviseme/widgets/topic/topic_pdfs.dart';
 
@@ -28,7 +28,7 @@ class _TopicScreenState extends State<TopicScreen> {
 
   List<Widget> _screens(Topic topic) {
     return [
-      TopicDescription(topic: topic),
+      TopicInformation(topic: topic),
       TopicPdfs(topic: topic),
       TopicImages(topic: topic),
       TopicLinks(topic: topic),
