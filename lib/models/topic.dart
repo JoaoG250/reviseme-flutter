@@ -127,17 +127,23 @@ class TopicFile {
   final Topic topic;
   final String fileType;
   final String file;
+  final String createdAt;
+  final String updatedAt;
 
   TopicFile({
     required this.id,
     required this.topic,
     required this.fileType,
     required this.file,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   TopicFile.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         topic = Topic.fromJson(json['topic']),
         fileType = json['fileType'],
-        file = json['file'];
+        file = json['file'],
+        createdAt = json['createdAt'],
+        updatedAt = json['updatedAt'];
 }

@@ -4,6 +4,7 @@ import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
 import 'package:reviseme/widgets/topic/topic_images.dart';
 import 'package:reviseme/widgets/topic/topic_description.dart';
+import 'package:reviseme/widgets/topic/topic_pdfs.dart';
 
 class TopicScreenArguments {
   final int topicId;
@@ -21,11 +22,12 @@ class TopicScreen extends StatefulWidget {
 
 class _TopicScreenState extends State<TopicScreen> {
   TopicService get service => GetIt.I<TopicService>();
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   String _title = 'Topic';
 
   List<Widget> _screens(Topic topic) {
     return [
+      TopicPdfs(topic: topic),
       TopicDescription(topic: topic),
       TopicImages(topic: topic),
     ];
@@ -37,9 +39,12 @@ class _TopicScreenState extends State<TopicScreen> {
     });
     switch (index) {
       case 0:
-        _title = 'Topic Description';
+        _title = 'Topic PDFs';
         break;
       case 1:
+        _title = 'Topic Description';
+        break;
+      case 2:
         _title = 'Topic Images';
         break;
     }
@@ -73,6 +78,10 @@ class _TopicScreenState extends State<TopicScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.picture_as_pdf),
+            label: 'PDFs',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.description),
             label: 'Description',

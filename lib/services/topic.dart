@@ -99,14 +99,8 @@ class TopicService {
     return jsonData['progress'];
   }
 
-  Future<List<TopicFile>> getTopicImages(int topicId) async {
-    final response = await client.get(
-      'topic-files/',
-      params: {
-        'topic': topicId.toString(),
-        'file_type': 'IMAGE',
-      },
-    );
+  Future<List<TopicFile>> getTopicFiles(Map<String, String>? params) async {
+    final response = await client.get('topic-files/', params: params);
     final jsonData = json.decode(response.body);
     final List<TopicFile> topicFiles = [];
     for (final topicFile in jsonData) {

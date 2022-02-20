@@ -32,7 +32,10 @@ class _TopicImagesState extends State<TopicImages> {
       _isLoading = true;
     });
 
-    final files = await service.getTopicImages(widget.topic.id);
+    final files = await service.getTopicFiles({
+      'topic': widget.topic.id.toString(),
+      'file_type': 'IMAGE',
+    });
     setState(() {
       _files = files;
       _isLoading = false;
