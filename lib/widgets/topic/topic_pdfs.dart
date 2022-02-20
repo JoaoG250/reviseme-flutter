@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:reviseme/models/topic.dart';
 import 'package:reviseme/services/topic.dart';
 import 'package:reviseme/widgets/topic/topic_pdf_create.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TopicPdfs extends StatefulWidget {
   final Topic topic;
@@ -61,8 +62,17 @@ class _TopicPdfsState extends State<TopicPdfs> {
                 style: const TextStyle(fontSize: 10),
               ),
               trailing: Text(_updatedAt.toString().substring(0, 10)),
-              onTap: () => {
-                print('tapped ${file.file}'),
+              onTap: () async {
+                final url = file.file;
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Could not open this file'),
+                    ),
+                  );
+                }
               },
             ),
           ),
