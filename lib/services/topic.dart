@@ -50,6 +50,12 @@ class TopicService {
     return topicRevisions;
   }
 
+  Future<TopicRevision> completeTopicRevision(int topicId) async {
+    final response = await client.get('topics/$topicId/complete_revision/');
+    final jsonData = json.decode(response.body);
+    return TopicRevision.fromJson(jsonData);
+  }
+
   Future<List<TopicRevision>> getTopicRevisionHistory() async {
     final response = await client.get(
       'topic-revisions/',

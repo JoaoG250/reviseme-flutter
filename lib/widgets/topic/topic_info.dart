@@ -34,16 +34,15 @@ class _TopicInformationState extends State<TopicInformation> {
 
     final revisions = await service.getTopicRevisions({
       'topic': widget.topic.id.toString(),
-      'complete': 'false',
     });
 
-    // If revisions is not empty get the first revision
+    // If revisions is not empty get the last revision
     if (revisions.isNotEmpty) {
-      final revision = revisions[0];
+      final revision = revisions.last;
 
-      // Start generated list with the first revision
+      // Start generated list with the revisions
       List<TopicRevision> generatedRevisions = [
-        revision,
+        ...revisions,
       ];
 
       // Get the next revision meta data
@@ -113,8 +112,12 @@ class _TopicInformationState extends State<TopicInformation> {
   Widget _buildListItem(TopicRevision revision) {
     return PaddedListItem(
       child: ListTile(
-        title: Center(child: Text(revision.revisionDate)),
+        title: Text(revision.revisionDate),
         leading: const ListLeadingIcon(icon: Icons.today),
+        trailing: Checkbox(
+          value: revision.complete,
+          onChanged: null,
+        ),
       ),
     );
   }
@@ -131,34 +134,49 @@ class _TopicInformationState extends State<TopicInformation> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 26),
-          child: Text(widget.topic.name, style: Styles.header),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(children: [
-            Text(widget.topic.description),
-            const SizedBox(height: 40),
-            const Text(
-              'Next Revisions',
-              style: Styles.subHeader,
+    return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Complete'),
+        icon: const Icon(Icons.check),
+        onPressed: () async {
+          await service.completeTopicRevision(widget.topic.id);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Revision marked as complete'),
             ),
-          ]),
-        ),
-        Expanded(
-          child: isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Padding(
-                  padding: const EdgeInsets.all(40),
-                  child: _buildRevisionList(),
-                ),
-        )
-      ],
+          );
+          await _fetchTopicRevisions();
+        },
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 26),
+            child: Text(widget.topic.name, style: Styles.header),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(children: [
+              Text(widget.topic.description),
+              const SizedBox(height: 40),
+              const Text(
+                'Next Revisions',
+                style: Styles.subHeader,
+              ),
+            ]),
+          ),
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: _buildRevisionList(),
+                  ),
+          )
+        ],
+      ),
     );
   }
 }

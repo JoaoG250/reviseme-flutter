@@ -15,13 +15,13 @@ class PaddedListItem extends StatelessWidget {
 
 class ListLeadingIcon extends StatelessWidget {
   final IconData icon;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color iconColor;
 
   const ListLeadingIcon({
     Key? key,
     required this.icon,
-    this.backgroundColor = Colors.blue,
+    this.backgroundColor,
     this.iconColor = Colors.white,
   }) : super(key: key);
 
@@ -32,7 +32,7 @@ class ListLeadingIcon extends StatelessWidget {
       width: 50,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: backgroundColor,
+        color: backgroundColor ?? Theme.of(context).primaryColor,
       ),
       child: Icon(
         icon,
