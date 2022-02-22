@@ -1,3 +1,5 @@
+import 'package:reviseme/models/iserializable.dart';
+
 class Subject {
   final int id;
   final String name;
@@ -24,7 +26,7 @@ class Subject {
         updatedAt = json['updatedAt'];
 }
 
-class CreateSubjectInput {
+class CreateSubjectInput implements ISerializable {
   final String name;
   final String description;
   final String? image;
@@ -35,6 +37,7 @@ class CreateSubjectInput {
     this.image,
   });
 
+  @override
   Map<String, dynamic> toJson() => {
         'name': name,
         'description': description,

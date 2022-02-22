@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:reviseme/models/iserializable.dart';
 import 'package:reviseme/models/subject.dart';
 
 class Topic {
@@ -34,7 +35,7 @@ class Topic {
         updatedAt = json['updatedAt'];
 }
 
-class CreateTopicInput {
+class CreateTopicInput implements ISerializable {
   final int subject;
   final String name;
   final String description;
@@ -47,6 +48,7 @@ class CreateTopicInput {
     this.image,
   });
 
+  @override
   Map<String, dynamic> toJson() => {
         'subject': subject,
         'name': name,
@@ -69,7 +71,7 @@ class UpdateTopicInput extends CreateTopicInput {
         );
 }
 
-class CreateTopicFileInput {
+class CreateTopicFileInput implements ISerializable {
   final int topic;
   final String fileType;
   final String filePath;
@@ -83,6 +85,7 @@ class CreateTopicFileInput {
     file = File(filePath);
   }
 
+  @override
   Map<String, String> toJson() => {
         'topic': topic.toString(),
         'fileType': fileType,
@@ -174,7 +177,7 @@ class TopicLink {
         updatedAt = json['updatedAt'];
 }
 
-class CreateTopicLinkInput {
+class CreateTopicLinkInput implements ISerializable {
   final int topic;
   final String title;
   final String url;
@@ -185,6 +188,7 @@ class CreateTopicLinkInput {
     required this.url,
   });
 
+  @override
   Map<String, dynamic> toJson() => {
         'topic': topic,
         'title': title,
