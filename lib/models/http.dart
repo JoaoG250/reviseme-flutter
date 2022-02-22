@@ -6,7 +6,32 @@ import 'package:reviseme/errors/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 
-class HttpClient {
+abstract class IHttpClient {
+  Future<http.Response> get(
+    String path, {
+    Map<String, String>? params,
+    Map<String, String>? headers,
+  });
+  Future<http.Response> post(
+    String path,
+    Map<String, dynamic> body, {
+    Map<String, String>? params,
+    Map<String, String>? headers,
+  });
+  Future<http.Response> put(
+    String path,
+    Map<String, dynamic> body, {
+    Map<String, String>? params,
+    Map<String, String>? headers,
+  });
+  Future<http.Response> delete(
+    String path, {
+    Map<String, String>? params,
+    Map<String, String>? headers,
+  });
+}
+
+class HttpClient implements IHttpClient {
   final String baseUrl;
   final _logger = Logger('HttpClient');
   final Map<String, String> _headers = {
@@ -83,6 +108,7 @@ class HttpClient {
     return url.replace(queryParameters: params);
   }
 
+  @override
   Future<http.Response> get(
     String path, {
     Map<String, String>? params,
@@ -95,6 +121,7 @@ class HttpClient {
     return _checkRespose(response);
   }
 
+  @override
   Future<http.Response> post(
     String path,
     Map<String, dynamic> body, {
@@ -109,6 +136,7 @@ class HttpClient {
     return _checkRespose(response);
   }
 
+  @override
   Future<http.Response> put(
     String path,
     Map<String, dynamic> body, {
@@ -123,6 +151,7 @@ class HttpClient {
     return _checkRespose(response);
   }
 
+  @override
   Future<http.Response> delete(
     String path, {
     Map<String, String>? params,
